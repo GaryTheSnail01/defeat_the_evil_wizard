@@ -1,4 +1,5 @@
-
+import random
+import sys
 
 # Base Character class
 class Character:
@@ -16,6 +17,16 @@ class Character:
 
     def display_stats(self):
         print(f"{self.name}'s Stats - Health: {self.health}/{self.max_health}, Attack Power: {self.attack_power}")
+        
+    def heal(self):
+        add_health = random.randrange(2, 15, 1)
+        self.health += add_health
+        if self.health > self.max_health:
+            self.health = self.max_health
+            print(f"You've healed to max health! Health: {self.health}/{self.max_health}")
+        else:    
+            print(f"You healed {add_health}HP! Health: {self.health}/{self.max_health}")
+        
 
 # Warrior class (inherits from Character)
 class Warrior(Character):
@@ -81,13 +92,13 @@ def battle(player, wizard):
         elif choice == '2':
             pass  # Implement special abilities
         elif choice == '3':
-            pass  # Implement heal method
+            player.heal()
         elif choice == '4':
             player.display_stats()
         else:
             print("Invalid choice. Try again.")
 
-        if wizard.health > 0:
+        if wizard.health > 0 and choice != '4':
             wizard.regenerate()
             wizard.attack(player)
 
