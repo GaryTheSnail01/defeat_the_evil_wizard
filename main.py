@@ -52,8 +52,9 @@ class EvilWizard(Character):
         super().__init__(name, health=150, attack_power=15)
 
     def regenerate(self):
-        self.health += 5
-        print(f"{self.name} regenerates 5 health! Current health: {self.health}")
+        add_health = random.randrange(2, 10, 1)
+        self.health += add_health
+        print(f"{self.name} regenerates {add_health}HP! Current health: {self.health}HP")
 
 def create_character():
     print("Choose your character class:")
@@ -75,7 +76,7 @@ def create_character():
         return Bard(name)
     else:
         print("Invalid choice. Please try again.")
-        create_character()
+        return create_character()
 
 def battle(player, wizard):
     while wizard.health > 0 and player.health > 0:
@@ -98,7 +99,7 @@ def battle(player, wizard):
         else:
             print("Invalid choice. Try again.")
 
-        if wizard.health > 0 and choice != '4':
+        if wizard.health > 0 and choice == '1' or '2' or '3':
             wizard.regenerate()
             wizard.attack(player)
 
@@ -111,8 +112,7 @@ def battle(player, wizard):
 
 def main():
     player = create_character()
-    wizard = EvilWizard("The Dark Wizard")
+    wizard = EvilWizard("The Evil Wizard")
     battle(player, wizard)
 
-if __name__ == "__main__":
-    main()
+main()
