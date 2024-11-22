@@ -1,19 +1,30 @@
 import random
-import sys
+
+
 
 # Base Character class
 class Character:
-    def __init__(self, name, health, attack_power):
+    def __init__(self, name, health, attack_power, attack_modifier = 1):
         self.name = name
         self.health = health
         self.attack_power = attack_power
-        self.max_health = health  
+        self.max_health = health
+        self.attack_modifier = attack_modifier  
 
     def attack(self, opponent):
-        opponent.health -= self.attack_power
-        print(f"{self.name} attacks {opponent.name} for {self.attack_power} damage!")
-        if opponent.health <= 0:
-            print(f"{opponent.name} has been defeated!")
+        total_attack = self.attack_power * self.attack_modifier
+        total_attack = int(total_attack) # if total_attack becomes a float, convert back to an int
+        opponent.health -= total_attack
+        self.attack_modifier = 1 # if attack_modifer > 1, reset to 1
+        
+        if self.attack_modifier == 1:
+            print(f"{self.name} attacks {opponent.name} for {total_attack} damage!")
+            if opponent.health <= 0:
+                print(f"{opponent.name} has been defeated!")
+        else:
+            print(f"{self.name} attacks {opponent.name} with a concentrated strike, dealing {total_attack} damage!")
+            if opponent.health <= 0:
+                print(f"{opponent.name} has been defeated!")
 
     def display_stats(self):
         print(f"{self.name}'s Stats - Health: {self.health}/{self.max_health}, Attack Power: {self.attack_power}")
@@ -31,20 +42,47 @@ class Character:
 # Warrior class (inherits from Character)
 class Warrior(Character):
     def __init__(self, name):
-        super().__init__(name, health=140, attack_power=25)
+        super().__init__(name, health=140, attack_power=35)
+        
+    def special_ability(self):
+        pass # shield ability, halves player damage
 
 # Mage class (inherits from Character)
 class Mage(Character):
     def __init__(self, name):
-        super().__init__(name, health=100, attack_power=35)
+        super().__init__(name, health=100, attack_power=25)
         
-class Monk(Character):
-    def __init__(self, name):
-        super().__init__(name, health=120, attack_power=35)
+    def special_ability(self):
+        self.attack_modifier += .5
+        print("You feel magical energy building within you...")
+        
+class Druid(Character):
+    def __init__(self, name, wild_shape = False):
+        super().__init__(name, health=120, attack_power=30)
+        self.wild_shape = wild_shape
+        
+    def special_ability(self):
+        if self.wild_shape == True:
+            print("You've shifted back into your human form...")
+            self.wild_shape = False
+        else:
+            self.wild_shape = True
+            print("Your form shifts and forms to become a massive bear! Lets see how the wizard will handle this...")
+            
+    def attack(self, opponent):
+        if self.wild_shape == True:
+            self.attack_modifier = 2
+            return super().attack(opponent)
+        else:
+            return super().attack(opponent)
+            
         
 class Bard(Character):
     def __init__(self, name):
-        super().__init__(name, health=110, attack_power=35)
+        super().__init__(name, health=110, attack_power=25)
+        
+    def special_ability(self):
+        pass # sing the wizard to sleep, skips a turn
 
 # EvilWizard class (inherits from Character)
 class EvilWizard(Character):
@@ -64,7 +102,7 @@ def create_character():
     print("Choose your character class:")
     print("1. Warrior")
     print("2. Mage")
-    print("3. Monk") 
+    print("3. Druid") 
     print("4. Bard")  
 
     class_choice = input("Enter the number of your class choice: ")
@@ -75,7 +113,7 @@ def create_character():
     elif class_choice == '2':
         return Mage(name)
     elif class_choice == '3':
-        return Monk(name)
+        return Druid(name)
     elif class_choice == '4':
         return Bard(name)
     else:
@@ -95,7 +133,7 @@ def battle(player, wizard):
         if choice == '1':
             player.attack(wizard)
         elif choice == '2':
-            pass  # Implement special abilities
+            player.special_ability()
         elif choice == '3':
             player.heal()
         elif choice == '4':
