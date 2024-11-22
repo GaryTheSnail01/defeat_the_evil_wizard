@@ -40,11 +40,11 @@ class Mage(Character):
         
 class Monk(Character):
     def __init__(self, name):
-        super().__init__(name, health=100, attack_power=35)
+        super().__init__(name, health=120, attack_power=35)
         
 class Bard(Character):
     def __init__(self, name):
-        super().__init__(name, health=100, attack_power=35)
+        super().__init__(name, health=110, attack_power=35)
 
 # EvilWizard class (inherits from Character)
 class EvilWizard(Character):
@@ -53,9 +53,13 @@ class EvilWizard(Character):
 
     def regenerate(self):
         add_health = random.randrange(2, 10, 1)
-        self.health += add_health
-        print(f"{self.name} regenerates {add_health}HP! Current health: {self.health}HP")
-
+        
+        if self.health + add_health < self.max_health:
+            self.health += add_health
+            print(f"{self.name} regenerates {add_health}HP! Current health: {self.health}HP")
+        else:
+            pass
+        
 def create_character():
     print("Choose your character class:")
     print("1. Warrior")
@@ -99,9 +103,12 @@ def battle(player, wizard):
         else:
             print("Invalid choice. Try again.")
 
-        if wizard.health > 0 and choice == '1' or '2' or '3':
-            wizard.regenerate()
+        if choice == '4':
+            continue
+        elif wizard.health > 0 and choice == '1' or '2' or '3':
             wizard.attack(player)
+            wizard.regenerate()
+            
 
         if player.health <= 0:
             print(f"{player.name} has been defeated!")
