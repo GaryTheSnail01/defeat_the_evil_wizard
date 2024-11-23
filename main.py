@@ -41,18 +41,15 @@ def battle(player, wizard):
             player.heal()
         elif choice == '4':
             player.display_stats()
+            continue
         else:
             print("Invalid choice. Try again.")
+            continue
 
-        if choice == '4':
-            continue
-        elif choice != '1' or '2' or '3':
-            continue
-        else:
+        if wizard.health > 0:
             wizard.attack(player)
             wizard.regenerate()
             
-
         if player.health <= 0:
             print(f"{player.name} has been defeated!")
             break
