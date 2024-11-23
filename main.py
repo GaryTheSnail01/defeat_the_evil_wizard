@@ -36,7 +36,7 @@ def battle(player, wizard):
         if choice == '1':
             player.attack(wizard)
         elif choice == '2':
-            player.special_ability()
+            player.special_abilities(wizard)
         elif choice == '3':
             player.heal()
         elif choice == '4':
